@@ -7,12 +7,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class EssentialsPlayTimeHook {
+public class EssentialsHook {
 
   private final File userdataFolder;
   private final boolean available;
 
-  public EssentialsPlayTimeHook() {
+  public EssentialsHook() {
     File essentialsFolder = null;
     if (Bukkit.getPluginManager().isPluginEnabled("Essentials")) {
       essentialsFolder =

@@ -36,8 +36,8 @@ public class RewardManager {
     if (!achievedFile.exists()) {
       try {
         achievedFile.createNewFile();
-      } catch (IOException var2) {
-        var2.printStackTrace();
+      } catch (IOException ex) {
+        ex.printStackTrace();
       }
     }
 
@@ -82,8 +82,8 @@ public class RewardManager {
 
     try {
       achievedConfig.save(achievedFile);
-    } catch (IOException var3) {
-      var3.printStackTrace();
+    } catch (IOException ex) {
+      ex.printStackTrace();
     }
   }
 
@@ -101,30 +101,27 @@ public class RewardManager {
     ConfigurationSection section = rewardsConfig.getConfigurationSection(
       "constant"
     );
-    if (section != null) {
-      for (String key : section.getKeys(false)) {
-        long interval = section.getLong(key + ".interval");
-        if (interval <= 0L || totalSeconds % interval != 0L) {
-          continue;
-        }
+    if (section == null) return;
+    for (String key : section.getKeys(false)) {
+      long interval = section.getLong(key + ".interval");
+      if (interval <= 0L || totalSeconds % interval != 0L) {
+        continue;
+      }
 
-        List<String> permissionsRequired = section.getStringList(
-          key + ".permissions-required"
-        );
-        boolean hasAll = true;
-        if (!permissionsRequired.isEmpty()) {
-          for (String perm : permissionsRequired) {
-            if (!player.hasPermission(perm)) {
-              hasAll = false;
-              break;
-            }
+      List<String> permissionsRequired = section.getStringList(
+        key + ".permissions-required"
+      );
+      boolean hasAll = true;
+      if (!permissionsRequired.isEmpty()) {
+        for (String perm : permissionsRequired) {
+          if (!player.hasPermission(perm)) {
+            hasAll = false;
+            break;
           }
         }
-
-        if (hasAll) {
-          runReward(player, section, key);
-        }
       }
+
+      if (hasAll) runReward(player, section, key);
     }
   }
 
@@ -132,34 +129,31 @@ public class RewardManager {
     ConfigurationSection section = rewardsConfig.getConfigurationSection(
       "unique"
     );
-    if (section != null) {
-      UUID uuid = player.getUniqueId();
-      achievedUnique.putIfAbsent(uuid, new HashSet<>());
+    if (section == null) return;
+    UUID uuid = player.getUniqueId();
+    achievedUnique.putIfAbsent(uuid, new HashSet<>());
 
-      for (String key : section.getKeys(false)) {
-        if (!((Set<String>) achievedUnique.get(uuid)).contains(key)) {
-          long threshold = section.getLong(key + ".at");
-          if (totalSeconds >= threshold) {
-            List<String> permissionsRequired = section.getStringList(
-              key + ".permissions-required"
-            );
-            boolean hasAll = true;
-            if (!permissionsRequired.isEmpty()) {
-              for (String perm : permissionsRequired) {
-                if (!player.hasPermission(perm)) {
-                  hasAll = false;
-                  break;
-                }
-              }
-            }
-
-            if (hasAll) {
-              runReward(player, section, key);
-              ((Set<String>) achievedUnique.get(uuid)).add(key);
-              saveClaimedData();
-            }
+    for (String key : section.getKeys(false)) {
+      if (((Set<String>) achievedUnique.get(uuid)).contains(key)) continue;
+      long threshold = section.getLong(key + ".at");
+      if (totalSeconds < threshold) continue;
+      List<String> permissionsRequired = section.getStringList(
+        key + ".permissions-required"
+      );
+      boolean hasAll = true;
+      if (!permissionsRequired.isEmpty()) {
+        for (String perm : permissionsRequired) {
+          if (!player.hasPermission(perm)) {
+            hasAll = false;
+            break;
           }
         }
+      }
+
+      if (hasAll) {
+        runReward(player, section, key);
+        ((Set<String>) achievedUnique.get(uuid)).add(key);
+        saveClaimedData();
       }
     }
   }
@@ -168,36 +162,33 @@ public class RewardManager {
     ConfigurationSection section = rewardsConfig.getConfigurationSection(
       "per-session"
     );
-    if (section != null) {
-      UUID uuid = player.getUniqueId();
-      achievedDaily.putIfAbsent(uuid, new HashSet<>());
-      String todayKey = LocalDate.now().toString();
+    if (section == null) return;
+    UUID uuid = player.getUniqueId();
+    achievedDaily.putIfAbsent(uuid, new HashSet<>());
+    String todayKey = LocalDate.now().toString();
 
-      for (String key : section.getKeys(false)) {
-        String dailyKey = todayKey + "_" + key;
-        if (!((Set<String>) achievedDaily.get(uuid)).contains(dailyKey)) {
-          long interval = section.getLong(key + ".interval");
-          if (sessionSeconds >= interval) {
-            List<String> permissionsRequired = section.getStringList(
-              key + ".permissions-required"
-            );
-            boolean hasAll = true;
-            if (!permissionsRequired.isEmpty()) {
-              for (String perm : permissionsRequired) {
-                if (!player.hasPermission(perm)) {
-                  hasAll = false;
-                  break;
-                }
-              }
-            }
-
-            if (hasAll) {
-              runReward(player, section, key);
-              ((Set<String>) achievedDaily.get(uuid)).add(dailyKey);
-              saveClaimedData();
-            }
+    for (String key : section.getKeys(false)) {
+      String dailyKey = todayKey + "_" + key;
+      if (((Set<String>) achievedDaily.get(uuid)).contains(dailyKey)) continue;
+      long interval = section.getLong(key + ".interval");
+      if (sessionSeconds < interval) continue;
+      List<String> permissionsRequired = section.getStringList(
+        key + ".permissions-required"
+      );
+      boolean hasAll = true;
+      if (!permissionsRequired.isEmpty()) {
+        for (String perm : permissionsRequired) {
+          if (!player.hasPermission(perm)) {
+            hasAll = false;
+            break;
           }
         }
+      }
+
+      if (hasAll) {
+        runReward(player, section, key);
+        ((Set<String>) achievedDaily.get(uuid)).add(dailyKey);
+        saveClaimedData();
       }
     }
   }
@@ -226,31 +217,24 @@ public class RewardManager {
     String sectionName,
     String key
   ) {
-    UUID uuid = player.getUniqueId();
-    switch (sectionName.hashCode()) {
-      case -840528943:
-        if (sectionName.equals("unique")) {
-          return (
-            (Set<String>) achievedUnique.getOrDefault(uuid, Set.of())
-          ).contains(key);
-        }
-        break;
-      case -567811164:
-        if (sectionName.equals("constant")) {
-          return false;
-        }
-        break;
-      case 1147578854:
-        if (sectionName.equals("per-session")) {
-          String var10000 = LocalDate.now().toString();
-          String todayKey = var10000 + "_" + key;
-          return (
-            (Set<String>) achievedDaily.getOrDefault(
-              uuid,
-              Collections.emptySet()
-            )
-          ).contains(todayKey);
-        }
+    switch (sectionName) {
+      case "unique":
+        return (
+          (Set<String>) achievedUnique.getOrDefault(
+            player.getUniqueId(),
+            Set.of()
+          )
+        ).contains(key);
+      case "constant":
+        return false;
+      case "per-session":
+        String todayKey = LocalDate.now().toString() + "_" + key;
+        return (
+          (Set<String>) achievedDaily.getOrDefault(
+            player.getUniqueId(),
+            Collections.emptySet()
+          )
+        ).contains(todayKey);
     }
 
     return false;
@@ -259,24 +243,20 @@ public class RewardManager {
   public static void clearAllRewards(UUID uuid) {
     achievedUnique.remove(uuid);
     achievedDaily.remove(uuid);
-    achievedConfig.set(uuid.toString(), (Object) null);
+    achievedConfig.set(uuid.toString(), null);
     saveClaimedData();
   }
 
   public static void clearRewardsByType(UUID uuid, String type) {
-    String var2;
-    switch ((var2 = type.toLowerCase()).hashCode()) {
-      case -840528943:
-        if (var2.equals("unique")) {
-          achievedUnique.remove(uuid);
-          achievedConfig.set(uuid.toString() + ".unique", (Object) null);
-        }
+    switch (type.toLowerCase()) {
+      case "unique":
+        achievedUnique.remove(uuid);
+        achievedConfig.set(uuid.toString() + ".unique", null);
         break;
-      case 1147578854:
-        if (var2.equals("per-session")) {
-          achievedDaily.remove(uuid);
-          achievedConfig.set(uuid.toString() + ".daily", (Object) null);
-        }
+      case "per-session":
+        achievedDaily.remove(uuid);
+        achievedConfig.set(uuid.toString() + ".daily", null);
+        break;
     }
 
     saveClaimedData();

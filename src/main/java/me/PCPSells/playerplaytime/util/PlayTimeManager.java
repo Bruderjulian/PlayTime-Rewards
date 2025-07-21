@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import me.PCPSells.playerplaytime.PlayerPlayTime;
-import me.PCPSells.playerplaytime.hooks.EssentialsPlayTimeHook;
+import me.PCPSells.playerplaytime.hooks.EssentialsHook;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,7 +22,7 @@ public class PlayTimeManager {
   private static FileConfiguration dataConfig;
   private static final Map<UUID, Long> todaySeconds = new ConcurrentHashMap<>();
   private static final Map<UUID, LocalDate> todayDate = new ConcurrentHashMap<>();
-  private static EssentialsPlayTimeHook essentialsHook;
+  private static EssentialsHook essentialsHook;
 
   public static void init(PlayerPlayTime plugin) {
     dataFile = new File(plugin.getDataFolder(), "data.yml");
@@ -34,7 +34,13 @@ public class PlayTimeManager {
         ex.printStackTrace();
       }
 
-      essentialsHook = new EssentialsPlayTimeHook();
+      if (
+        PlayerPlayTime.instance
+          .getConfig()
+          .getBoolean("essentials-integration.enabled", false)
+      ) {
+        essentialsHook = new EssentialsHook();
+      }
     }
 
     dataConfig = YamlConfiguration.loadConfiguration(dataFile);
@@ -77,13 +83,7 @@ public class PlayTimeManager {
   }
 
   public static long getPlayTime(UUID uuid) {
-    if (
-      PlayerPlayTime.instance
-        .getConfig()
-        .getBoolean("essentials-integration.enabled", false) &&
-      essentialsHook != null &&
-      essentialsHook.isAvailable()
-    ) {
+    if (essentialsHook != null && essentialsHook.isAvailable()) {
       Player player = Bukkit.getPlayer(uuid);
       if (player != null && player.isOnline()) {
         long essTime = essentialsHook.getPlayTimeSeconds(player);
