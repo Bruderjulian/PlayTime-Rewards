@@ -52,70 +52,129 @@ public class PlayTimeCommand implements TabExecutor {
 
     switch (args[0]) {
       case "help":
-        Text.send(sender, "messages.help");
-        return true;
+        {
+          Text.send(sender, "messages.help");
+          return true;
+        }
       case "player":
-        if (!sender.hasPermission("playtime.other")) {
-          Text.send(sender, "messages.no-permission");
+        {
+          if (!sender.hasPermission("playtime.other")) {
+            Text.send(sender, "messages.no-permission");
+          }
+          OfflinePlayer target = Utils.toOfflinePlayer(args[1]);
+          if (!target.hasPlayedBefore() && !target.isOnline()) {
+            Text.send(sender, "messages.invalid-player");
+          }
+          String playtime = PlayTimeManager.getFormattedPlayTime(
+            target.getUniqueId()
+          );
+          Text.send(
+            sender,
+            "messages.playtime.other",
+            new Replaceable("%player%", target.getName()),
+            new Replaceable("%playtime%", playtime)
+          );
+          return true;
         }
-        OfflinePlayer target = Utils.toOfflinePlayer(args[0]);
-        if (!target.hasPlayedBefore() && !target.isOnline()) {
-          Text.send(sender, "messages.invalid-player");
+      case "set":
+        {
+          if (!sender.hasPermission("playtime.admin")) {
+            Text.send(sender, "messages.no-permission");
+          }
+          OfflinePlayer target = Utils.toOfflinePlayer(args[1]);
+          if (!target.hasPlayedBefore() && !target.isOnline()) {
+            Text.send(sender, "messages.invalid-player");
+          }
+          long time = Utils.parseTime(args[2]);
+          UUID targetUUID = target.getUniqueId();
+          PlayTimeManager.setPlayTime(targetUUID, time);
         }
-        String playtime = PlayTimeManager.getFormattedPlayTime(
-          target.getUniqueId()
-        );
-        Text.send(
-          sender,
-          "messages.playtime.other",
-          new Replaceable("%player%", target.getName()),
-          new Replaceable("%playtime%", playtime)
-        );
-        return true;
+      case "add":
+        {
+          if (!sender.hasPermission("playtime.admin")) {
+            Text.send(sender, "messages.no-permission");
+          }
+          OfflinePlayer target = Utils.toOfflinePlayer(args[1]);
+          if (!target.hasPlayedBefore() && !target.isOnline()) {
+            Text.send(sender, "messages.invalid-player");
+          }
+          long time = Utils.parseTime(args[2]);
+          UUID targetUUID = target.getUniqueId();
+          PlayTimeManager.setPlayTime(
+            targetUUID,
+            PlayTimeManager.getPlayTime(targetUUID) + time
+          );
+        }
+      case "remove":
+        {
+          if (!sender.hasPermission("playtime.admin")) {
+            Text.send(sender, "messages.no-permission");
+          }
+          OfflinePlayer target = Utils.toOfflinePlayer(args[1]);
+          if (!target.hasPlayedBefore() && !target.isOnline()) {
+            Text.send(sender, "messages.invalid-player");
+          }
+          long time = Utils.parseTime(args[2]);
+          UUID targetUUID = target.getUniqueId();
+          PlayTimeManager.setPlayTime(
+            targetUUID,
+            PlayTimeManager.getPlayTime(targetUUID) - time
+          );
+        }
       case "top":
-        if (!sender.hasPermission("playtime.top")) {
-          Text.send(sender, "messages.no-permission");
-        }
-        if (!(sender instanceof Player)) {
-          Text.send(sender, "messages.player-only");
+        {
+          if (!sender.hasPermission("playtime.top")) {
+            Text.send(sender, "messages.no-permission");
+          }
+          if (!(sender instanceof Player)) {
+            Text.send(sender, "messages.player-only");
+            return true;
+          }
+          TopPlaytimeGUI.openTopPlaytimeGUI((Player) sender);
           return true;
         }
-        TopPlaytimeGUI.openTopPlaytimeGUI((Player) sender);
-        return true;
       case "rewards":
-        if (!sender.hasPermission("playtime.rewards")) {
-          Text.send(sender, "messages.no-permission");
-        }
-        if (!(sender instanceof Player)) {
-          Text.send(sender, "messages.player-only");
+        {
+          if (!sender.hasPermission("playtime.rewards")) {
+            Text.send(sender, "messages.no-permission");
+          }
+          if (!(sender instanceof Player)) {
+            Text.send(sender, "messages.player-only");
+            return true;
+          }
+          RewardsGUI.openRewardsGUI((Player) sender);
           return true;
         }
-        RewardsGUI.openRewardsGUI((Player) sender);
-        return true;
       case "clearrewards":
-        if (!sender.hasPermission("playtime.admin")) {
-          Text.send(sender, "messages.no-permission");
+        {
+          if (!sender.hasPermission("playtime.admin")) {
+            Text.send(sender, "messages.no-permission");
+            return true;
+          }
+          if (args.length == 1) {
+            Text.send(sender, "messages.clear-rewards-breakdown");
+          } else if (args.length == 2) {
+            clearRewards(sender, args);
+          } else if (args.length == 3) {
+            clearRewards(sender, args);
+          }
           return true;
         }
-        if (args.length == 1) {
-          Text.send(sender, "messages.clear-rewards-breakdown");
-        } else if (args.length == 2) {
-          clearRewards(sender, args);
-        } else if (args.length == 3) {
-          clearRewards(sender, args);
-        }
-        return true;
       case "reload":
-        if (!sender.hasPermission("playtime.admin")) {
-          Text.send(sender, "messages.no-permission");
+        {
+          if (!sender.hasPermission("playtime.admin")) {
+            Text.send(sender, "messages.no-permission");
+            return true;
+          }
+          this.plugin.reload();
+          Text.send(sender, "messages.reloaded");
           return true;
         }
-        this.plugin.reload();
-        Text.send(sender, "messages.reloaded");
-        return true;
       default:
-        Text.send(sender, "messages.help");
-        return true;
+        {
+          Text.send(sender, "messages.help");
+          return true;
+        }
     }
   }
 

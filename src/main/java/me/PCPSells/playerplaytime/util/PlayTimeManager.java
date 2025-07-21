@@ -94,6 +94,10 @@ public class PlayTimeManager {
     return (Long) playtimes.getOrDefault(uuid, 0L);
   }
 
+  public static void setPlayTime(UUID uuid, long playtime) {
+    playtimes.put(uuid, playtime);
+  }
+
   public static void saveAll() {
     for (Entry<UUID, Long> entry : playtimes.entrySet()) {
       dataConfig.set(((UUID) entry.getKey()).toString(), entry.getValue());

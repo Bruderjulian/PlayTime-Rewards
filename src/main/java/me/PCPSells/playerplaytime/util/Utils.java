@@ -9,6 +9,21 @@ import org.bukkit.OfflinePlayer;
 
 public class Utils {
 
+  public static List<String> configuredUnits;
+  public static boolean pluralize;
+
+  public static void reload() {
+    configuredUnits =
+      PlayerPlayTime.instance.getConfig().getStringList("time-format-units");
+    if (configuredUnits.isEmpty()) {
+      configuredUnits = List.of("day", "hour", "minute", "second");
+    }
+    pluralize =
+      PlayerPlayTime.instance
+        .getConfig()
+        .getBoolean("append-formats-with-an-s", true);
+  }
+
   @SuppressWarnings("deprecation")
   public static OfflinePlayer toOfflinePlayer(String name) {
     try {
@@ -38,9 +53,7 @@ public class Utils {
     long minutes = seconds / 60L;
     seconds %= 60L;
     PlayerPlayTime plugin = PlayerPlayTime.instance;
-    boolean pluralize = plugin
-      .getConfig()
-      .getBoolean("append-formats-with-an-S", true);
+
     HashMap<String, Long> units = new HashMap<>();
     units.put("day", days);
     units.put("hour", hours);
@@ -48,14 +61,6 @@ public class Utils {
     units.put("second", seconds);
 
     StringBuilder sb = new StringBuilder();
-
-    List<String> configuredUnits = plugin
-      .getConfig()
-      .getStringList("time-format-units");
-    if (configuredUnits.isEmpty()) {
-      configuredUnits = List.of("day", "hour", "minute", "second");
-    }
-
     for (String unit : configuredUnits) {
       long value = (Long) units.getOrDefault(unit, 0L);
       if (value <= 0L) continue;
@@ -78,5 +83,30 @@ public class Utils {
     }
 
     return sb.toString().trim();
+  }
+
+  public static long parseTime(String string) {
+    long time = 0L;
+    String[] parts = string.split(" ");
+    for (String part : parts) {
+      String[] split = part.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+      long value = Long.parseLong(split[0]);
+      String unit = split[1];
+      switch (unit) {
+        case "d":
+          time += value * 86400L;
+          break;
+        case "h":
+          time += value * 3600L;
+          break;
+        case "m":
+          time += value * 60L;
+          break;
+        case "s":
+          time += value;
+          break;
+      }
+    }
+    return time;
   }
 }
