@@ -245,6 +245,9 @@ public class PlayTimeCommand implements TabExecutor {
         completions.add("clearrewards");
         completions.add("help");
         completions.add("player");
+        completions.add("set");
+        completions.add("add");
+        completions.add("remove");
       }
 
       if (sender.hasPermission("playtime.use")) {
@@ -256,6 +259,9 @@ public class PlayTimeCommand implements TabExecutor {
       sender.hasPermission("playtime.admin") &&
       (
         args[0].equalsIgnoreCase("player") ||
+        args[0].equalsIgnoreCase("set") ||
+        args[0].equalsIgnoreCase("add") ||
+        args[0].equalsIgnoreCase("remove") ||
         args[0].equalsIgnoreCase("clearrewards")
       )
     ) {
