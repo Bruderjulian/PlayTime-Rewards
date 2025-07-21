@@ -1,0 +1,28 @@
+author: PCPSells
+description: Fully configurable way to track players playtime and reward them for it.
+api-version: 1.16
+main: me.PCPSells.playerplaytime.PlayerPlayTime
+name: PlayTime
+version: 2.4.0
+softdepend:
+  - PlaceholderAPI
+commands:
+  playtime:
+    description: View your playtime or others'
+    usage: /<command> [player|top|rewards|clearrewards|help|reload]
+permissions:
+  playtime.admin:
+    description: use admin stuff
+    default: op
+  playtime.use:
+    description: use the playtime command
+    default: true
+  playtime.other:
+    description: view playtimes from other
+    default: true
+  playtime.rewards:
+    description: get rewards for the playtime
+    default: true
+  playtime.top:
+    description: view the top players
+    default: true

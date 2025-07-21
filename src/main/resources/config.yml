@@ -1,0 +1,34 @@
+# config.yml
+prefix: "&bᴘʟᴀʏᴛɪᴍᴇ &e♦ &f"
+
+time-format-units:
+  - day
+  - hour
+  - minute
+  # - second # comment this out if you don't want seconds
+time-formats:
+  day: " day"
+  hour: " hour"
+  minute: " minute"
+  second: " second"
+append-formats-with-an-S: true
+
+tell-target-rewards-were-cleared: true
+
+update-check:
+  enabled: true
+  message: "&bᴘʟᴀʏᴛɪᴍᴇ &e♦ &fA new version, &b%latest%&f, is available. You're running &e%current%&f."
+
+guis:
+  top:
+    title: "&fᴛᴏᴘ &bᴘʟᴀʏᴛɪᴍᴇꜱ"
+    amount: 10
+    player-name: "&b#%position% &7» &b%player%"
+    player-playtime: "&7%playtime%"
+  rewards:
+    title: "&bᴘʟᴀʏᴛɪᴍᴇ &fʀᴇᴡᴀʀᴅꜱ"
+
+essentials-integration:
+  enabled: false
+  # When this setting is enabled, PlayTime will no longer use its internal counter system for the data.
+  # It will fetch this data from the already existing EssentialsX data.

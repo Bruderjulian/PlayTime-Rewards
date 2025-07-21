@@ -1,0 +1,34 @@
+# messages.yml
+playtime:
+  self: "You have played for &b%playtime%&f."
+  other: "&b%player% &fhas played for &b%playtime%&f."
+  not-found: "&cNo playtime found for %target%."
+reloaded: "&aConfiguration reloaded."
+top-header: "Opening top playtimes..."
+no-permission: "&cYou do not have permission to do that."
+player-only: "&cOnly players can run this command."
+invalid-player: "&cPlayer not found."
+invalid-usage: "&cInvalid usage."
+rewards-were-cleared: "Your playtime reward data has been &creset&f." # in the config.yml, the setting: "Tell-Target-All-Their-PlayTime-Rewards-Were-Cleared" must be set to "true" for the target to receive this message.
+cleared-players-rewards: "All reward data for &b%player% &fhas been &ccleared&f."
+player-not-on-the-confirm-list: "That players' PlayTime rewards aren't pending clear. &7(&e/pt clearrewards %player%&7)"
+constant-rewards-cant-be-cleared: "&bConstant &frewards can't be reset. The rewards are intended to always be able to be redone."
+per-session-rewards-were-cleared: "&6Per-session &frewards were &ccleared &ffor &b%player%&f."
+unique-rewards-were-cleared: "&aUnique &frewards were &ccleared &ffor &b%player%&f."
+invalid-reward-type: "&cInvalid &freward type. Use: &aunique &for &6per-session"
+players-data-already-in-confirm-list: "The reward data for &b%player% &fis already pending confirmation. &7(&e/pt clearrewards %player% confirm&7)"
+hover-message:
+  message-in-chat: "You need to confirm clearing &lALL &fof &b%player%s' &freward data. &7(&a&lClick to confirm&7)"
+  hover: "&fClick to confirm clearing of &b%player%s' &freward data."
+clear-rewards-breakdown:
+  - "Usage: &e/pt clearrewards (player) [reward-type]"
+  - "                     &7(required) [optional]"
+  - ""
+  - "&fValid reward types: &aunique &f& &6per-session"
+help:
+  - "&e/playtime &7- &fView your playtime."
+  - "&e/playtime (player) &7- &fView another player's playtime."
+  - "&e/playtime rewards &7- &fView rewards for playtime milestones."
+  - "&e/playtime clearrewards (player) [reward-type] &7- &fClear all or a specified type of reward data for a player."
+  - "&e/playtime top &7- &fView top playtimes."
+  - "&e/playtime reload &7- &fReload plugin configuration."

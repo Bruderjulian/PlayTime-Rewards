@@ -1,0 +1,80 @@
+# rewards.yml
+
+# Constant rewards repeat every X seconds of TOTAL playtime.
+# Each reward entry requires:
+#   interval: seconds (integer)
+#   command: command to run (use %player% as placeholder)
+#   message: (optional) message to send to the player
+constant:
+  two_hours:
+    material: DIAMOND
+    name: "&b%interval%"
+    lore:
+      - "&7Earn a reward every &b%interval%&7."
+      - ""
+      - "&fReward: &a%reward%"
+      - "&fType: &bConstant"
+    interval: 7200 # 2 hours
+    command: "eco give %player% 100"
+    message: "&bᴘʟᴀʏᴛɪᴍᴇ &e♦ &fYou received &a$100 &ffor reaching 2 hours played!"
+    gui-interval: "2 hours"
+    reward-desc: "$100"
+    permissions-required: []
+
+# Unique rewards are given ONCE when total playtime reaches the threshold.
+unique:
+  one_day:
+    unique:
+    material: EMERALD
+    name: "&a%interval%"
+    lore:
+      - "&7Earn a special reward for"
+      - "&7hitting a specific milestone."
+      - ""
+      - "&fReward: &a%reward%"
+      - "&fType: &aUnique"
+    achieved:
+      material: LIME_WOOL
+      name: "&aAchieved - %interval%"
+      lore:
+        - "&7You've already achieved this reward."
+        - ""
+        - "&fReward: &a%reward%"
+        - "&fType: &aUnique"
+    at: 86400  # 24 hours
+    command: "give %player% diamond 5"
+    message: "&bᴘʟᴀʏᴛɪᴍᴇ &e♦ &b24 hour &fmilestone reached! Enjoy &b5 diamonds&f."
+    gui-interval: "1 day"
+    reward-desc: "5x diamonds"
+    permissions-required:
+      - playtime.rewards.unique1
+      - playtime.rewards.rank1
+
+# Per-session rewards can be earned once per calendar day
+# when the player's playtime for that day reaches the interval.
+per-session:
+  daily_half_hour:
+    material: GOLD_INGOT
+    name: "&6%interval%"
+    lore:
+      - "&7Come back every day and"
+      - "&7play for at least &b%interval%&7!"
+      - ""
+      - "&fReward: &a%reward%"
+      - "&fType: &6Per-session"
+    achieved:
+      material: LIME_WOOL
+      name: "&aAchieved - %interval%"
+      lore:
+        - "&7You've already achieved this reward."
+        - ""
+        - "&fReward: &a%reward%"
+        - "&fType: &aUnique"
+    interval: 1800 # 30 minutes in a single day
+    command: "crate key give %player% daily 1"
+    message: "&bᴘʟᴀʏᴛɪᴍᴇ &e♦ &fThank you for playing &b30 minutes &ftoday! — Here’s a daily key!"
+    gui-interval: "30 minutes"
+    reward-desc: "1x Daily Key"
+    permissions-required:
+      - playtime.rewards.per-session1
+      - playtime.rewards.rank1
