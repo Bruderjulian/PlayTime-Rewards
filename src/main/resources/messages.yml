@@ -1,14 +1,19 @@
 # messages.yml
 playtime:
-  self: "You have played for &b%playtime%&f."
-  other: "&b%player% &fhas played for &b%playtime%&f."
-  not-found: "&cNo playtime found for %target%."
+  self: "You have played for &b%playtime%&f"
+  other: "&b%player% &fhas played for &b%playtime%&f"
+  not-found: "&cNo playtime found for %target%"
+  added: "&aAdded &b%change%&a to &b%player% (now &b%playtime%&a)"
+  removed: "&aRemoved &b%change%&a from &b%player% (now &b%playtime%&a)"
+  setted: "&aSet &b%player% &ato &b%playtime%&a"
+  invalid-time: "&cInvalid time format."
+
 reloaded: "&aConfiguration reloaded."
 top-header: "Opening top playtimes..."
 no-permission: "&cYou do not have permission to do that."
 player-only: "&cOnly players can run this command."
-invalid-player: "&cPlayer not found."
-invalid-usage: "&cInvalid usage."
+invalid-player: "&cPlayer not found"
+invalid-usage: "&cInvalid usage"
 rewards-were-cleared: "Your playtime reward data has been &creset&f." # in the config.yml, the setting: "Tell-Target-All-Their-PlayTime-Rewards-Were-Cleared" must be set to "true" for the target to receive this message.
 cleared-players-rewards: "All reward data for &b%player% &fhas been &ccleared&f."
 player-not-on-the-confirm-list: "That players' PlayTime rewards aren't pending clear. &7(&e/pt clearrewards %player%&7)"

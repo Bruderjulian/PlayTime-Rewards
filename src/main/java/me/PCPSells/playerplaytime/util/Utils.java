@@ -76,9 +76,7 @@ public class Utils {
     }
 
     if (sb.length() == 0) {
-      sb
-        .append("0")
-        .append(plugin.getConfig().getString("time-formats.second", " second"));
+      sb.append("0");
       if (pluralize) sb.append("s");
     }
 
@@ -90,9 +88,13 @@ public class Utils {
     String[] parts = string.split(" ");
     for (String part : parts) {
       String[] split = part.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+      if (split.length == 0) continue;
       long value = Long.parseLong(split[0]);
-      String unit = split[1];
-      switch (unit) {
+      if (split.length == 1) {
+        time += value;
+        continue;
+      }
+      switch (split[1]) {
         case "d":
           time += value * 86400L;
           break;

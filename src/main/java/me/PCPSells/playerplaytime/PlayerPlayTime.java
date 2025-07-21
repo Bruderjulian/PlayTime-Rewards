@@ -9,6 +9,7 @@ import me.PCPSells.playerplaytime.util.PlayTimeManager;
 import me.PCPSells.playerplaytime.util.RewardManager;
 import me.PCPSells.playerplaytime.util.Text;
 import me.PCPSells.playerplaytime.util.UpdateChecker;
+import me.PCPSells.playerplaytime.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
@@ -23,6 +24,7 @@ public final class PlayerPlayTime extends JavaPlugin {
     instance = this;
     this.saveDefaultConfig();
     Text.reload();
+
     if (this.getConfig().getBoolean("update-check.enabled", true)) {
       this.updateChecker = new UpdateChecker(this);
       this.updateChecker.checkForUpdates();
@@ -45,6 +47,7 @@ public final class PlayerPlayTime extends JavaPlugin {
       Text.info("PlaceholderAPI detected — placeholders registered.");
     }
 
+    Utils.reload();
     RewardsGUI.reload();
     TopPlaytimeGUI.reload();
     RewardManager.init(this);
@@ -69,6 +72,7 @@ public final class PlayerPlayTime extends JavaPlugin {
   public void reload() {
     this.reloadConfig();
     Text.reload();
+    Utils.reload();
     RewardManager.reload();
     RewardsGUI.reload();
     TopPlaytimeGUI.reload();

@@ -17,6 +17,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
 public class PlayTimeCommand implements TabExecutor {
 
@@ -48,6 +49,7 @@ public class PlayTimeCommand implements TabExecutor {
 
     if (!sender.hasPermission("playtime.use")) {
       Text.send(sender, "messages.no-permission");
+      return true;
     }
 
     switch (args[0]) {
@@ -60,6 +62,10 @@ public class PlayTimeCommand implements TabExecutor {
         {
           if (!sender.hasPermission("playtime.other")) {
             Text.send(sender, "messages.no-permission");
+          }
+          if (args.length < 2) {
+            Text.send(sender, "messages.invalid-usage");
+            return true;
           }
           OfflinePlayer target = Utils.toOfflinePlayer(args[1]);
           if (!target.hasPlayedBefore() && !target.isOnline()) {
@@ -81,6 +87,10 @@ public class PlayTimeCommand implements TabExecutor {
           if (!sender.hasPermission("playtime.admin")) {
             Text.send(sender, "messages.no-permission");
           }
+          if (args.length < 3) {
+            Text.send(sender, "messages.invalid-usage");
+            return true;
+          }
           OfflinePlayer target = Utils.toOfflinePlayer(args[1]);
           if (!target.hasPlayedBefore() && !target.isOnline()) {
             Text.send(sender, "messages.invalid-player");
@@ -88,11 +98,27 @@ public class PlayTimeCommand implements TabExecutor {
           long time = Utils.parseTime(args[2]);
           UUID targetUUID = target.getUniqueId();
           PlayTimeManager.setPlayTime(targetUUID, time);
+
+          Text.send(
+            sender,
+            "messages.playtime.setted",
+            new Replaceable("%player%", target.getName()),
+            new Replaceable("%change%", Utils.formatTime(time)),
+            new Replaceable(
+              "%playtime%",
+              PlayTimeManager.getFormattedPlayTime(targetUUID)
+            )
+          );
+          return true;
         }
       case "add":
         {
           if (!sender.hasPermission("playtime.admin")) {
             Text.send(sender, "messages.no-permission");
+          }
+          if (args.length < 3) {
+            Text.send(sender, "messages.invalid-usage");
+            return true;
           }
           OfflinePlayer target = Utils.toOfflinePlayer(args[1]);
           if (!target.hasPlayedBefore() && !target.isOnline()) {
@@ -104,11 +130,27 @@ public class PlayTimeCommand implements TabExecutor {
             targetUUID,
             PlayTimeManager.getPlayTime(targetUUID) + time
           );
+
+          Text.send(
+            sender,
+            "messages.playtime.added",
+            new Replaceable("%player%", target.getName()),
+            new Replaceable("%change%", Utils.formatTime(time)),
+            new Replaceable(
+              "%playtime%",
+              PlayTimeManager.getFormattedPlayTime(targetUUID)
+            )
+          );
+          return true;
         }
       case "remove":
         {
           if (!sender.hasPermission("playtime.admin")) {
             Text.send(sender, "messages.no-permission");
+          }
+          if (args.length < 3) {
+            Text.send(sender, "messages.invalid-usage");
+            return true;
           }
           OfflinePlayer target = Utils.toOfflinePlayer(args[1]);
           if (!target.hasPlayedBefore() && !target.isOnline()) {
@@ -120,6 +162,18 @@ public class PlayTimeCommand implements TabExecutor {
             targetUUID,
             PlayTimeManager.getPlayTime(targetUUID) - time
           );
+
+          Text.send(
+            sender,
+            "messages.playtime.removed",
+            new Replaceable("%player%", target.getName()),
+            new Replaceable("%change%", Utils.formatTime(time)),
+            new Replaceable(
+              "%playtime%",
+              PlayTimeManager.getFormattedPlayTime(targetUUID)
+            )
+          );
+          return true;
         }
       case "top":
         {
@@ -254,6 +308,11 @@ public class PlayTimeCommand implements TabExecutor {
         completions.add("top");
         completions.add("rewards");
       }
+      return StringUtil.copyPartialMatches(
+        args[0],
+        completions,
+        new ArrayList<>()
+      );
     } else if (
       args.length == 2 &&
       sender.hasPermission("playtime.admin") &&
@@ -268,6 +327,11 @@ public class PlayTimeCommand implements TabExecutor {
       for (Player p : Bukkit.getOnlinePlayers()) {
         completions.add(p.getName());
       }
+      return StringUtil.copyPartialMatches(
+        args[1],
+        completions,
+        new ArrayList<>()
+      );
     } else if (
       args.length == 3 &&
       args[0].equalsIgnoreCase("clearrewards") &&
@@ -276,8 +340,14 @@ public class PlayTimeCommand implements TabExecutor {
       completions.add("unique");
       completions.add("all");
       completions.add("per-session");
+
+      return StringUtil.copyPartialMatches(
+        args[2],
+        completions,
+        new ArrayList<>()
+      );
     }
 
-    return completions;
+    return null;
   }
 }
