@@ -4,11 +4,9 @@ import me.PCPSells.playerplaytime.commands.PlayTimeCommand;
 import me.PCPSells.playerplaytime.gui.RewardsGUI;
 import me.PCPSells.playerplaytime.gui.TopPlaytimeGUI;
 import me.PCPSells.playerplaytime.hooks.PlayTimePlaceholder;
-import me.PCPSells.playerplaytime.listeners.JoinListener;
 import me.PCPSells.playerplaytime.util.PlayTimeManager;
 import me.PCPSells.playerplaytime.util.RewardManager;
 import me.PCPSells.playerplaytime.util.Text;
-import me.PCPSells.playerplaytime.util.UpdateChecker;
 import me.PCPSells.playerplaytime.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -18,23 +16,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class PlayerPlayTime extends JavaPlugin {
 
   public static PlayerPlayTime instance;
-  public UpdateChecker updateChecker;
 
   public void onLoad() {
     instance = this;
     this.saveDefaultConfig();
     Text.reload();
-
-    if (this.getConfig().getBoolean("update-check.enabled", true)) {
-      this.updateChecker = new UpdateChecker(this);
-      this.updateChecker.checkForUpdates();
-    }
   }
 
   public void onEnable() {
-    this.getServer()
-      .getPluginManager()
-      .registerEvents(new JoinListener(), this);
     this.getServer()
       .getPluginManager()
       .registerEvents(new TopPlaytimeGUI(), this);
