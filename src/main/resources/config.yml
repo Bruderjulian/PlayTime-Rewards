@@ -7,17 +7,13 @@ time-format-units:
   - minute
   # - second # comment this out if you don't want seconds
 time-formats:
-  day: " day"
-  hour: " hour"
-  minute: " minute"
-  second: " second"
+  day: "d"
+  hour: "h"
+  minute: "m"
+  second: "s"
 append-formats-with-an-S: true
 
 tell-target-rewards-were-cleared: true
-
-update-check:
-  enabled: true
-  message: "&bᴘʟᴀʏᴛɪᴍᴇ &e♦ &fA new version, &b%latest%&f, is available. You're running &e%current%&f."
 
 guis:
   top:
