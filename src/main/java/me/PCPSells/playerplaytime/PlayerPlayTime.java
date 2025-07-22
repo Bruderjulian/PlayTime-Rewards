@@ -4,6 +4,7 @@ import me.PCPSells.playerplaytime.commands.PlayTimeCommand;
 import me.PCPSells.playerplaytime.gui.RewardsGUI;
 import me.PCPSells.playerplaytime.gui.TopPlaytimeGUI;
 import me.PCPSells.playerplaytime.hooks.PlayTimePlaceholder;
+import me.PCPSells.playerplaytime.util.CooldownManager;
 import me.PCPSells.playerplaytime.util.PlayTimeManager;
 import me.PCPSells.playerplaytime.util.RewardManager;
 import me.PCPSells.playerplaytime.util.Text;
@@ -37,6 +38,7 @@ public final class PlayerPlayTime extends JavaPlugin {
     }
 
     Utils.reload();
+    CooldownManager.reload();
     RewardsGUI.reload();
     TopPlaytimeGUI.reload();
     RewardManager.init(this);
@@ -62,6 +64,7 @@ public final class PlayerPlayTime extends JavaPlugin {
     this.reloadConfig();
     Text.reload();
     Utils.reload();
+    CooldownManager.reload();
     RewardManager.reload();
     RewardsGUI.reload();
     TopPlaytimeGUI.reload();

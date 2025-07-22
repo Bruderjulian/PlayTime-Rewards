@@ -6,6 +6,7 @@ import java.util.UUID;
 import me.PCPSells.playerplaytime.PlayerPlayTime;
 import me.PCPSells.playerplaytime.gui.RewardsGUI;
 import me.PCPSells.playerplaytime.gui.TopPlaytimeGUI;
+import me.PCPSells.playerplaytime.util.CooldownManager;
 import me.PCPSells.playerplaytime.util.PlayTimeManager;
 import me.PCPSells.playerplaytime.util.RewardManager;
 import me.PCPSells.playerplaytime.util.Text;
@@ -33,6 +34,7 @@ public class PlayTimeCommand implements TabExecutor {
     String label,
     String[] args
   ) {
+    handleCooldown(sender);
     if (args.length == 0) {
       if (!(sender instanceof Player)) {
         Text.send(sender, "messages.player-only");
@@ -230,6 +232,25 @@ public class PlayTimeCommand implements TabExecutor {
           return true;
         }
     }
+  }
+
+  public void handleCooldown(CommandSender sender) {
+    if (!(sender instanceof Player)) {
+      return;
+    }
+    UUID uuid = ((Player) sender).getUniqueId();
+    if (!CooldownManager.isOnCooldown(uuid)) {
+      CooldownManager.start(uuid);
+      return;
+    }
+    Text.send(
+      sender,
+      "messages.cooldown",
+      new Replaceable(
+        "%time%",
+        Utils.formatTime(CooldownManager.getCooldownLeft(uuid))
+      )
+    );
   }
 
   public void clearRewards(CommandSender sender, String[] args) {

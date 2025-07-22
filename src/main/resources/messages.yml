@@ -14,6 +14,7 @@ no-permission: "&cYou do not have permission to do that."
 player-only: "&cOnly players can run this command."
 invalid-player: "&cPlayer not found"
 invalid-usage: "&cInvalid usage"
+cooldown: "&cYou are on cooldown. Please wait &b%time% &cseconds."
 rewards-were-cleared: "Your playtime reward data has been &creset&f." # in the config.yml, the setting: "Tell-Target-All-Their-PlayTime-Rewards-Were-Cleared" must be set to "true" for the target to receive this message.
 cleared-players-rewards: "All reward data for &b%player% &fhas been &ccleared&f."
 player-not-on-the-confirm-list: "That players' PlayTime rewards aren't pending clear. &7(&e/pt clearrewards %player%&7)"

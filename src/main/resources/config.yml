@@ -14,6 +14,9 @@ time-formats:
 append-formats-with-an-S: true
 
 tell-target-rewards-were-cleared: true
+cooldown:
+  enabled: true
+  time: 10 # in seconds
 
 guis:
   top:
